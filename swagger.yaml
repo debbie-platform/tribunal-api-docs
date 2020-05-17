@@ -11,6 +11,8 @@ host: "api.tribunal.debbieapp.com"
 
 basePath: "/v1"
 tags:
+  - name: "Status"
+    description: "Status."
   - name: "Webhooks"
     description: "Webhooks to receive new events."
 

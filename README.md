@@ -1,1 +1,1 @@
-# Cosmo API Docs
+# Tribunal API Docs
