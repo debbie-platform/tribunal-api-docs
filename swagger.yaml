@@ -1,0 +1,89 @@
+swagger: "2.0"
+info:
+  description: "The Debbie APIs is a RESTful interface, allowing you to programmatically update, add and access much of your data on the platform. It provides predictable URLs for accessing resources, and uses built-in HTTP features to receive commands and return responses. This makes it easy to communicate with third party systems."
+  version: "v1.0.0"
+  title: "Tribunal API Docs"
+  contact:
+    email: "support@debbie.dk"
+  x-logo:
+    url: "https://debbie-platform.github.io/tribunal-api-docs/deb-logo.svg"
+host: "api.tribunal.debbieapp.com"
+
+basePath: "/v1"
+tags:
+  - name: "Webhooks"
+    description: "Webhooks to receive new events."
+
+schemes:
+  - "https"
+paths:
+  /:
+    get:
+      tags:
+        - "Status"
+      summary: "Status"
+      description: "Status endpoint."
+      operationId: "status"
+      responses:
+        "200":
+          description: "Successful operation"
+
+securityDefinitions:
+  Header Parameter:
+    type: "apiKey"
+    name: "X-Tribunal-Auth-Token: <YOUR_VERY_SECRET_TOKEN>"
+    in: "header"
+  Query Parameter:
+    type: "apiKey"
+    name: "authToken=<YOUR_VERY_SECRET_TOKEN>"
+    in: "query"
+
+definitions:
+  Address:
+    type: "object"
+    properties:
+      address:
+        type: "string"
+      coAddress:
+        type: "string"
+      zipcode:
+        type: "string"
+      city:
+        type: "string"
+      country:
+        type: "string"
+  Phone:
+    type: "object"
+    properties:
+      number:
+        type: "string"
+      locale:
+        type: "string"
+      isCompany:
+        type: "boolean"
+      referenceId:
+        type: "string"
+      name:
+        type: "string"
+      address:
+        $ref: "#/definitions/Address"
+      email:
+        type: "string"
+      phone:
+        $ref: "#/definitions/Phone"
+      AKSEnroll:
+        type: "boolean"
+
+  Webhook:
+    type: "object"
+    properties:
+      webhookId:
+        type: "string"
+      endpoint:
+        type: "string"
+      createdAt:
+        type: "string"
+
+externalDocs:
+  description: "Find out more about Tribunal"
+  url: "https://debbie.dk/tribunal"
