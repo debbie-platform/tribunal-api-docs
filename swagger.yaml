@@ -246,10 +246,10 @@ security:
 
 components:
   securitySchemes:
-    bearerAuth: # arbitrary name for the security scheme
+    bearerAuth:
       type: http
       scheme: bearer
-      bearerFormat: <YOUR_VERY_SECRET_TOKEN> # optional, arbitrary value for documentation purposes
+      bearerFormat: Bearer <YOUR_VERY_SECRET_TOKEN>
   schemas:
     Success:
       type: "object"
