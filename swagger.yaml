@@ -238,6 +238,8 @@ paths:
                 $ref: "#/components/schemas/Job"
 
     delete:
+      tags:
+        - "Jobs"
       summary: "Delete a job"
       description: "Delete a job"
       operationId: "delete-job"
