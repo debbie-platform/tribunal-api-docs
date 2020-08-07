@@ -1,7 +1,7 @@
-swagger: "2.0"
+swagger: "3.0"
 info:
   description: "The Debbie APIs is a RESTful interface, allowing you to programmatically update, add and access much of your data on the platform. It provides predictable URLs for accessing resources, and uses built-in HTTP features to receive commands and return responses. This makes it easy to communicate with third party systems."
-  version: "v1.0.0"
+  version: "v0.0.1"
   title: "Tribunal API Docs"
   contact:
     email: "support@debbie.dk"
@@ -30,61 +30,696 @@ paths:
         "200":
           description: "Successful operation"
 
+  /keys:
+    get:
+      tags:
+        - "Keys"
+      summary: "Get keys"
+      description: "Get your api keys"
+      operationId: "get-key"
+      responses:
+        "200":
+          description: "Successful operation"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Key"
+
+    post:
+      tags:
+        - "Keys"
+      summary: "Create a key"
+      description: "Create a new api key for tribunal"
+      operationId: "create-key"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "New key created"
+          required: true
+          schema:
+            $ref: "#/definitions/CreateKey"
+      responses:
+        "200":
+          description: "Successful operation"
+          schema:
+            type: object
+            required:
+              - key
+            properties:
+              key:
+                type: string
+
+  /keys/:id:
+    delete:
+      summary: "Delete a key"
+      description: "Delete an api key"
+      operationId: "delete-keys"
+      responses:
+        "200":
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/Success"
+
+  /sessions:
+    post:
+      summary: "Create a session"
+      description: "Create a session of minretssag.dk, which can be used to create cases within"
+      operationId: "create-session"
+      responses:
+        "200":
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/Success"
+
+  /cases:
+    post:
+      summary: "Create a case"
+      description: "Create a new case"
+      operationId: "create-case"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "New case created"
+          required: true
+          schema:
+            $ref: "#/definitions/CreateCase"
+      responses:
+        "200":
+          description: "Successful operation"
+          schema:
+            type: object
+            required:
+              - jobId
+              - message
+              - sessionCreationNeeded
+            properties:
+              jobId:
+                type: string
+              message:
+                type: string
+              sessionCreationNeeded:
+                type: boolean
+
+  /hooks:
+    get:
+      tags:
+        - "Hooks"
+      summary: "Get hooks"
+      description: "Get your webhooks"
+      operationId: "get-hook"
+      responses:
+        "200":
+          description: "Successful operation"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Hook"
+
+    post:
+      tags:
+        - "Hooks"
+      summary: "Create a hook"
+      description: "Create a new webhook"
+      operationId: "create-hook"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "New webhook created"
+          required: true
+          schema:
+            $ref: "#/definitions/CreateHook"
+      responses:
+        "200":
+          description: "Successful operation"
+          schema:
+            type: object
+            required:
+              - id
+              - verificationToken
+            properties:
+              id:
+                type: string
+              verificationToken:
+                type: string
+
+  /hooks/:id:
+    delete:
+      summary: "Delete a hook"
+      description: "Delete a webhook"
+      operationId: "delete-hook"
+      responses:
+        "200":
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/Success"
+
+  /jobs:
+    get:
+      tags:
+        - "Jobs"
+      summary: "Get jobs"
+      description: "Get your jobs"
+      operationId: "get-jobs"
+      responses:
+        "200":
+          description: "Successful operation"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Job"
+  /jobs/:id:
+    get:
+      tags:
+        - "Jobs"
+      summary: "Get a job"
+      description: "Get a job"
+      operationId: "get-job"
+      responses:
+        "200":
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/Job"
+
+  delete:
+    summary: "Delete a job"
+    description: "Delete a job"
+    operationId: "delete-job"
+    responses:
+      "200":
+        description: "Successful operation"
+        schema:
+          $ref: "#/definitions/Success"
+
 securityDefinitions:
   Header Parameter:
     type: "apiKey"
-    name: "X-Tribunal-Auth-Token: <YOUR_VERY_SECRET_TOKEN>"
+    name: "Authorization: Bearer <YOUR_VERY_SECRET_TOKEN>"
     in: "header"
-  Query Parameter:
-    type: "apiKey"
-    name: "authToken=<YOUR_VERY_SECRET_TOKEN>"
-    in: "query"
 
 definitions:
-  Address:
+  Success:
     type: "object"
+    required:
+      - success
+      - message
     properties:
-      address:
-        type: "string"
-      coAddress:
-        type: "string"
-      zipcode:
-        type: "string"
-      city:
-        type: "string"
-      country:
-        type: "string"
-  Phone:
+      success:
+        type: boolean
+      message:
+        type: string
+  Error:
     type: "object"
+    required:
+      - success
+      - code
+      - error
     properties:
-      number:
-        type: "string"
-      locale:
-        type: "string"
-      isCompany:
-        type: "boolean"
-      referenceId:
+      success:
+        type: boolean
+      code:
+        type: number
+      error:
+        type: string
+  Key:
+    type: "object"
+    required:
+      - id
+      - name
+      - permissions
+      - createdAt
+    properties:
+      id:
         type: "string"
       name:
         type: "string"
-      address:
-        $ref: "#/definitions/Address"
-      email:
-        type: "string"
-      phone:
-        $ref: "#/definitions/Phone"
-      AKSEnroll:
-        type: "boolean"
-
-  Webhook:
-    type: "object"
-    properties:
-      webhookId:
-        type: "string"
-      endpoint:
+      permissions:
         type: "string"
       createdAt:
         type: "string"
+  CreateKey:
+    type: "object"
+    required:
+      - name
+    properties:
+      tenantId:
+        type: "string"
+      name:
+        type: "string"
+      permissions:
+        type: "string"
+
+  CreateHook:
+    additionalProperties: false
+    properties:
+      events:
+        items:
+          $ref: "#/components/schemas/EventType"
+        type: array
+      name:
+        type: string
+      url:
+        type: string
+    required:
+      - name
+      - url
+      - events
+    type: object
+  EventType:
+    enum:
+      - case.create.success
+      - case.create.failed
+      - session.needed
+    type: string
+  Hook:
+    additionalProperties: false
+    properties:
+      createdAt:
+        additionalProperties: false
+        type: object
+      events:
+        items:
+          $ref: "#/components/schemas/EventType"
+        type: array
+      id:
+        type: string
+      name:
+        type: string
+      tenantId:
+        type: string
+      url:
+        type: string
+      verificationToken:
+        type: string
+    required:
+      - id
+      - tenantId
+      - name
+      - url
+      - events
+      - verificationToken
+      - createdAt
+    type: object
+
+  Address:
+    additionalProperties: false
+    properties:
+      city:
+        type: string
+      co:
+        type: string
+      floor:
+        type: string
+      number:
+        type: string
+      side:
+        type: string
+      street:
+        type: string
+      zipcode:
+        type: string
+    required:
+      - street
+      - number
+      - zipcode
+      - city
+    type: object
+  Appendix:
+    additionalProperties: false
+    properties:
+      date:
+        type: string
+      fileId:
+        $ref: "#/components/schemas/ID"
+      name:
+        type: string
+      type:
+        type: string
+    required:
+      - fileId
+      - name
+      - date
+      - type
+    type: object
+  CreateCase:
+    additionalProperties: false
+    properties:
+      additionalInformation:
+        type: string
+      appendicies:
+        items:
+          $ref: "#/components/schemas/Appendix"
+        type: array
+      creditors:
+        items:
+          $ref: "#/components/schemas/MainEntity"
+        type: array
+      debtors:
+        items:
+          $ref: "#/components/schemas/MainEntity"
+        type: array
+      financials:
+        items:
+          $ref: "#/components/schemas/Financial"
+        type: array
+      shortDescription:
+        type: string
+      statementClaim:
+        type: string
+      type:
+        $ref: "#/components/schemas/CaseType"
+    required:
+      - type
+      - creditors
+      - debtors
+      - financials
+      - shortDescription
+      - statementClaim
+    type: object
+  CaseType:
+    enum:
+      - SMALL_CASE
+      - COMMON_CIVIL_CASE
+    type: string
+  Company:
+    additionalProperties: false
+    properties:
+      address:
+        $ref: "#/components/schemas/Address"
+      alternativeAddress:
+        $ref: "#/components/schemas/Address"
+      alternativeName:
+        type: string
+      contact:
+        additionalProperties: false
+        properties:
+          email:
+            type: string
+          mobile:
+            type: string
+          otherInfo:
+            type: string
+          phone:
+            type: string
+          title:
+            type: string
+        type: object
+      cvrNumber:
+        type: string
+      foreignIdNumber:
+        type: string
+      name:
+        type: string
+      referenceNumber:
+        type: string
+      type:
+        $ref: "#/components/schemas/EntityType"
+        enum:
+          - COMPANY
+        type: string
+    required:
+      - address
+      - name
+      - type
+    type: object
+  Entity:
+    anyOf:
+      - $ref: "#/components/schemas/Person"
+      - $ref: "#/components/schemas/Company"
+  EntityType:
+    enum:
+      - PERSON
+      - COMPANY
+    type: string
+  Financial:
+    additionalProperties: false
+    properties:
+      collectionCost:
+        type: number
+      compensationCost:
+        type: number
+      interest:
+        $ref: "#/components/schemas/Interest"
+      interestOwed:
+        type: number
+      others:
+        type: number
+      principal:
+        type: number
+      reminderFees:
+        type: number
+    required:
+      - principal
+      - others
+    type: object
+  ID:
+    type: string
+  Interest:
+    anyOf:
+      - $ref: "#/components/schemas/ProcessInterest"
+      - $ref: "#/components/schemas/YearlyInterest"
+      - $ref: "#/components/schemas/MonthlyInterest"
+  Laywer:
+    additionalProperties: false
+    properties:
+      query:
+        type: string
+      referenceNumber:
+        type: string
+    required:
+      - query
+    type: object
+  MainEntity:
+    anyOf:
+      - additionalProperties: false
+        properties:
+          accountNumber:
+            type: string
+          address:
+            $ref: "#/components/schemas/Address"
+          alternativeAddress:
+            $ref: "#/components/schemas/Address"
+          alternativeName:
+            type: string
+          contact:
+            additionalProperties: false
+            properties:
+              email:
+                type: string
+              mobile:
+                type: string
+              otherInfo:
+                type: string
+              phone:
+                type: string
+              title:
+                type: string
+            type: object
+          cprNumber:
+            type: string
+          lawyers:
+            items:
+              $ref: "#/components/schemas/Laywer"
+            type: array
+          name:
+            type: string
+          noNotificationOnDeadlineAndCourt:
+            type: boolean
+          noNotificationOnOtherParticipantActions:
+            type: boolean
+          notificationEmails:
+            items:
+              type: string
+            type: array
+          referenceNumber:
+            type: string
+          trustees:
+            items:
+              $ref: "#/components/schemas/Trustee"
+            type: array
+          type:
+            $ref: "#/components/schemas/EntityType"
+            enum:
+              - PERSON
+            type: string
+          vatMode:
+            $ref: "#/components/schemas/VatRegistration"
+        required:
+          - address
+          - name
+          - type
+        type: object
+      - additionalProperties: false
+        properties:
+          accountNumber:
+            type: string
+          address:
+            $ref: "#/components/schemas/Address"
+          alternativeAddress:
+            $ref: "#/components/schemas/Address"
+          alternativeName:
+            type: string
+          contact:
+            additionalProperties: false
+            properties:
+              email:
+                type: string
+              mobile:
+                type: string
+              otherInfo:
+                type: string
+              phone:
+                type: string
+              title:
+                type: string
+            type: object
+          cvrNumber:
+            type: string
+          foreignIdNumber:
+            type: string
+          lawyers:
+            items:
+              $ref: "#/components/schemas/Laywer"
+            type: array
+          name:
+            type: string
+          noNotificationOnDeadlineAndCourt:
+            type: boolean
+          noNotificationOnOtherParticipantActions:
+            type: boolean
+          notificationEmails:
+            items:
+              type: string
+            type: array
+          referenceNumber:
+            type: string
+          trustees:
+            items:
+              $ref: "#/components/schemas/Trustee"
+            type: array
+          type:
+            $ref: "#/components/schemas/EntityType"
+            enum:
+              - COMPANY
+            type: string
+          vatMode:
+            $ref: "#/components/schemas/VatRegistration"
+        required:
+          - address
+          - name
+          - type
+        type: object
+  MonthlyInterest:
+    additionalProperties: false
+    properties:
+      interest:
+        type: number
+      interestType:
+        enum:
+          - MONTHLY_INTEREST
+        type: string
+      startDate:
+        type: string
+    required:
+      - interestType
+      - startDate
+      - interest
+    type: object
+  Person:
+    additionalProperties: false
+    properties:
+      address:
+        $ref: "#/components/schemas/Address"
+      alternativeAddress:
+        $ref: "#/components/schemas/Address"
+      alternativeName:
+        type: string
+      contact:
+        additionalProperties: false
+        properties:
+          email:
+            type: string
+          mobile:
+            type: string
+          otherInfo:
+            type: string
+          phone:
+            type: string
+          title:
+            type: string
+        type: object
+      cprNumber:
+        type: string
+      name:
+        type: string
+      referenceNumber:
+        type: string
+      type:
+        $ref: "#/components/schemas/EntityType"
+        enum:
+          - PERSON
+        type: string
+    required:
+      - address
+      - name
+      - type
+    type: object
+  ProcessInterest:
+    additionalProperties: false
+    properties:
+      interestType:
+        enum:
+          - PROCESS_INTEREST
+        type: string
+      startDate:
+        type: string
+    required:
+      - interestType
+      - startDate
+    type: object
+  Trustee:
+    $ref: "#/components/schemas/Entity"
+  VatRegistration:
+    enum:
+      - NONE
+      - PARTIAL
+      - FULL
+    type: string
+  YearlyInterest:
+    additionalProperties: false
+    properties:
+      interest:
+        type: number
+      interestType:
+        enum:
+          - YEARLY_INTEREST
+        type: string
+      startDate:
+        type: string
+    required:
+      - interestType
+      - startDate
+      - interest
+    type: object
+
+  Job:
+    additionalProperties: false
+    properties:
+      completed:
+        type: boolean
+      createdAt:
+        additionalProperties: false
+        type: object
+      data: {}
+      id:
+        type: string
+      result: {}
+    required:
+      - id
+      - data
+      - result
+      - completed
+      - createdAt
+    type: object
 
 externalDocs:
   description: "Find out more about Tribunal"
