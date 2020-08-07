@@ -83,6 +83,8 @@ paths:
 
   /keys/:id:
     delete:
+      tags:
+        - "Keys"
       summary: "Delete a key"
       description: "Delete an api key"
       operationId: "delete-keys"
@@ -96,6 +98,8 @@ paths:
 
   /sessions:
     post:
+      tags:
+        - "Sessions"
       summary: "Create a session"
       description: "Create a session of minretssag.dk, which can be used to create cases within"
       operationId: "create-session"
@@ -109,6 +113,8 @@ paths:
 
   /cases:
     post:
+      tags:
+        - "Cases"
       summary: "Create a case"
       description: "Create a new case"
       operationId: "create-case"
@@ -186,6 +192,8 @@ paths:
 
   /hooks/:id:
     delete:
+      tags:
+        - "Hooks"
       summary: "Delete a hook"
       description: "Delete a webhook"
       operationId: "delete-hook"
