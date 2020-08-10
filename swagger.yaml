@@ -9,7 +9,7 @@ info:
     url: "https://debbie-platform.github.io/tribunal-api-docs/deb-logo.svg"
 
 servers:
-  - url: https://api.tribunal.debbieapp.com/v1
+  - url: https://api.tribunal.debbieapp.com
     description: Production server
 
 tags:
