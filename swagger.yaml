@@ -409,6 +409,9 @@ components:
       properties:
         additionalInformation:
           type: string
+        reference:
+          type: string
+          nullable: true
         appendicies:
           items:
             $ref: "#/components/schemas/Appendix"
@@ -757,10 +760,14 @@ components:
         id:
           type: string
         result: {}
+        reference:
+          type: string
+          nullable: true
       required:
         - id
         - data
         - result
+        - reference
         - completed
         - createdAt
       type: object
